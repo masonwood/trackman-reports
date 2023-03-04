@@ -37,22 +37,25 @@ pitch_alphas = {
 }
 
 # change function name here and import in main.py
-def report18(data, save_path):
+def report19(data, save_path):
     Pitcher = data['Pitcher'][1]
-    InducedVertBreak = data['InducedVertBreak']
-    HorzBreak = data['HorzBreak']
+    VertApprAngle = data['VertApprAngle']
+    PlateLocHeight = data['PlateLocHeight']
     TaggedPitchType = data['TaggedPitchType']
+    PitchCall = data['PitchCall']
 
     # plt.scatter(HorzBreak, InducedVertBreak, s=100, c='red', edgecolor='black', linewidth=1, alpha=0.75)
 
-    for i, j in enumerate(HorzBreak):
+    for i, j in enumerate(PlateLocHeight):
         plt.scatter(
-            [HorzBreak [i]],
-            [InducedVertBreak [i]], 
-            s=50, 
-            c=pitch_colors.get(TaggedPitchType[i], 'Fastball'),
-            edgecolor='black',
-        )  
+            [PlateLocHeight [i]],
+            [VertApprAngle [i]], 
+            s=75, 
+            c=pitch_colors.get(TaggedPitchType[i], 'red'),
+            marker=pitch_result.get(PitchCall[i], '*'),
+            edgecolor='black', 
+            alpha=pitch_alphas.get(TaggedPitchType[i], '1'),
+        )
 
     # pitch_colors_labels = []
 
@@ -61,14 +64,14 @@ def report18(data, save_path):
     #     mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
     #   )
 
-    plt.title('Pitch Movement', fontsize=16)
-    plt.xlabel('Horiziontal Break (in)', fontsize=12)
-    plt.ylabel('Vertical Break (in)', fontsize=12)
+    plt.title('VAA - Pitch Location Height', fontsize=16)
+    plt.xlabel('PlateLocHeight', fontsize=12)
+    plt.ylabel('Vertical Approach Angle', fontsize=12)
     # plt.tight_layout()
 
     # remains the same for every file
     check_path(save_path)
 
     # save image to folder
-    plt.savefig(get_path(save_path, 'report18'))
+    plt.savefig(get_path(save_path, 'report19'))
     plt.close()

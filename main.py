@@ -20,6 +20,7 @@ from report15 import report15
 from report16 import report16
 from report17 import report17
 from report18 import report18
+from report19 import report19
 
 data_paths = os.listdir('../zCSV')
 
@@ -58,3 +59,4 @@ report15(data, folder_name)
 report16(data, folder_name)
 report17(data, folder_name)
 report18(data, folder_name)
+report19(data, folder_name)

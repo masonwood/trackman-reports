@@ -61,41 +61,19 @@ def report8(data, save_path):
 
     #plot only Fastball, Sinker, Cutter from TaggedPitchType
 
-    rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1)
+    rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1, lw=1)
     plt.gca().add_patch(rect);
 
-    rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1)
+    rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1, lw=1)
     plt.gca().add_patch(rect);
 
-    rect = Rectangle((-.9,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([-0.3, -0.3], [1.5, 3], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([0.3, 0.3], [1.5, 3], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([-0.9, 0.9], [2.5, 2.5], 'k-', lw=1)
 
-    rect = Rectangle((-.3,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((-.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((-.3,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((-.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([-0.9, 0.9], [2, 2], 'k-', lw=1)
 
     for i in scatter_points:
         # if data['PitchCall'][i] == 'HitByPitch': 
@@ -104,7 +82,7 @@ def report8(data, save_path):
         plt.scatter(
             [PlateLocSide [i]],
             [PlateLocHeight [i]], 
-            s=100, 
+            s=75, 
             c=pitch_colors.get(TaggedPitchType[i], 'red'),
             marker=pitch_result.get(PitchCall[i], '*'),
             edgecolor='black', 
@@ -120,7 +98,7 @@ def report8(data, save_path):
 
         
 
-    plt.title('Fast Balls', fontsize=16)
+    plt.title(f'{len(scatter_points)} Fast Balls', fontsize=16)
     plt.xlabel('PlateLocSide', fontsize=12)
     plt.ylabel('PlateLocHeight', fontsize=12)
 
