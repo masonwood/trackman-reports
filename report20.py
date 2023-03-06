@@ -37,14 +37,23 @@ pitch_alphas = {
 }
 
 # change function name here and import in main.py
-def report15(data, save_path):
+def report20(data, save_path):
     Pitcher = data['Pitcher'][1]
     PlateLocHeight = data['PlateLocHeight']
     PlateLocSide = data['PlateLocSide']
     TaggedPitchType = data['TaggedPitchType']
     PitchCall = data['PitchCall']
     ExitSpeed = data['ExitSpeed']
-    scatter_points = PlateLocSide[data['ExitSpeed'] > 0].to_dict()
+    ReleaseSpeed = data['RelSpeed']
+    PlayResult = data['PlayResult']
+
+    scatter_points = PlateLocSide[
+    (data['PitchCall'] == 'StrikeSwinging')
+    &
+    (
+        (data['BatterSide'] == 'Right')
+    )
+    ].to_dict()
 
     rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1, lw=1)
     plt.gca().add_patch(rect);
@@ -73,14 +82,15 @@ def report15(data, save_path):
             edgecolor='black', 
             alpha=pitch_alphas.get(TaggedPitchType[i], '1'),
         )
-        plt.annotate(round(ExitSpeed[i], 1),
+        plt.annotate(
+        round(ReleaseSpeed[i], 1),      
         xy=(PlateLocSide[i], PlateLocHeight[i]),
         xycoords='data',
         xytext=(PlateLocSide[i] + 10, PlateLocHeight [i]),
         textcoords='offset points',
         )
 
-    plt.title(f'{len(scatter_points)} Batted Balls', fontsize=16)
+    plt.title(f'{len(scatter_points)} RHH Whiffs', fontsize=16)
     plt.xlabel('Side (FT)', fontsize=12)
     plt.ylabel('Height (FT)', fontsize=12)
 
@@ -106,10 +116,9 @@ def report15(data, save_path):
     plt.ylim([0,4])
     plt.tight_layout()
 
-
   # remains the same for every file
     check_path(save_path)
 
   # save image to folder
-    plt.savefig(get_path(save_path, 'report15'))
+    plt.savefig(get_path(save_path, 'report20'))
     plt.close()

@@ -38,15 +38,13 @@ pitch_alphas = {
 
 # change function name here and import in main.py
 def report5(data, save_path):
-    fig, ax = plt.subplots()
+    data.boxplot(by ='TaggedPitchType',grid='True',column =['SpinRate'], color='red', vert=False)
 
-    for key, grp in data.groupby('TaggedPitchType'):
-        ax = grp.plot(ax=ax, kind='line', y='SpinRate',  label=key, c=pitch_colors.get(key))
-
-    plt.title('Spin Rate Pro/Regression', fontsize=16)
-    plt.xlabel('Pitch count', fontsize=12)
-    plt.ylabel('Spin Rate', fontsize=12)
-    plt.legend(loc='best')
+    plt.subplots_adjust(left=0.20)
+    plt.suptitle('')
+    plt.title('Spin Bands', fontsize=16)
+    plt.xlabel('Spin Rate (RPM)', fontsize=12)
+    plt.ylabel('Pitch Type', fontsize=12)
 
   # remains the same for every file
     check_path(save_path)

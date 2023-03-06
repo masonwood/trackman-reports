@@ -39,36 +39,90 @@ pitch_alphas = {
 # change function name here and import in main.py
 def report18(data, save_path):
     Pitcher = data['Pitcher'][1]
-    InducedVertBreak = data['InducedVertBreak']
-    HorzBreak = data['HorzBreak']
+    PlateLocHeight = data['PlateLocHeight']
+    PlateLocSide = data['PlateLocSide']
     TaggedPitchType = data['TaggedPitchType']
+    PitchCall = data['PitchCall']
+    ExitSpeed = data['ExitSpeed']
+    ReleaseSpeed = data['RelSpeed']
+    PlayResult = data['PlayResult']
 
-    # plt.scatter(HorzBreak, InducedVertBreak, s=100, c='red', edgecolor='black', linewidth=1, alpha=0.75)
+    scatter_points = PlateLocSide[
+    (
+      (data['PitchCall'] == 'StrikeSwinging') 
+      | (data['PitchCall'] == 'FoulBall') 
+      | (data['PitchCall'] == 'InPlay') 
+    )
+    &
+     (
+        (data['BatterSide'] == 'Left')
+    )
+  ].to_dict()
 
-    for i, j in enumerate(HorzBreak):
+    rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1, lw=1)
+    plt.gca().add_patch(rect);
+
+    rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1, lw=1)
+    plt.gca().add_patch(rect);
+
+    plt.plot([-0.3, -0.3], [1.5, 3], 'k-', lw=1)
+
+    plt.plot([0.3, 0.3], [1.5, 3], 'k-', lw=1)
+
+    plt.plot([-0.9, 0.9], [2.5, 2.5], 'k-', lw=1)
+
+    plt.plot([-0.9, 0.9], [2, 2], 'k-', lw=1)
+
+    for i in scatter_points:
+        if data['PitchCall'][i] == 'HitByPitch': 
+            continue
+
         plt.scatter(
-            [HorzBreak [i]],
-            [InducedVertBreak [i]], 
-            s=50, 
-            c=pitch_colors.get(TaggedPitchType[i], 'Fastball'),
-            edgecolor='black',
-        )  
+            [PlateLocSide [i]],
+            [PlateLocHeight [i]], 
+            s=75, 
+            c=pitch_colors.get(TaggedPitchType[i], 'red'),
+            marker=pitch_result.get(PitchCall[i], '*'),
+            edgecolor='black', 
+            alpha=pitch_alphas.get(TaggedPitchType[i], '1'),
+        )
+        # plt.annotate(
+        # round(ReleaseSpeed[i], 1),      
+        # xy=(PlateLocSide[i], PlateLocHeight[i]),
+        # xycoords='data',
+        # xytext=(PlateLocSide[i] + 10, PlateLocHeight [i]),
+        # textcoords='offset points',
+        # )
 
-    # pitch_colors_labels = []
+    plt.title(f'{len(scatter_points)} LHH Swings', fontsize=16)
+    plt.xlabel('Side (FT)', fontsize=12)
+    plt.ylabel('Height (FT)', fontsize=12)
 
-    # for key in pitch_colors:
-    #   pitch_colors_labels.append(
-    #     mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
-    #   )
+    pitch_colors_labels = []
 
-    plt.title('Pitch Movement', fontsize=16)
-    plt.xlabel('Horiziontal Break', fontsize=12)
-    plt.ylabel('Vertical Break', fontsize=12)
-    # plt.tight_layout()
+    for key in pitch_colors:
+        pitch_colors_labels.append(
+        mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
+    )
 
-    # remains the same for every file
+    for key in pitch_result:
+        pitch_colors_labels.append(
+        mlines.Line2D([], [], color='black', marker=pitch_result[key], linestyle='None', markersize=10, label=key)
+    )
+
+
+    plt.grid(False)
+
+    plt.text(-3.95, 3.92, Pitcher, fontsize = 4)
+    plt.text(-3.95, 3.83, 'Pitcher POV', fontsize = 4)
+    plt.legend(handles=pitch_colors_labels)
+    plt.xlim([-4,4])
+    plt.ylim([0,4])
+    plt.tight_layout()
+
+  # remains the same for every file
     check_path(save_path)
 
-    # save image to folder
+  # save image to folder
     plt.savefig(get_path(save_path, 'report18'))
     plt.close()

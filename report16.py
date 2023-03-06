@@ -46,48 +46,28 @@ def report16(data, save_path):
     ExitSpeed = data['ExitSpeed']
     ReleaseSpeed = data['RelSpeed']
     PlayResult = data['PlayResult']
-    KorBB = data['KorBB']
 
-    scatter_points = KorBB[
-    (data['KorBB'] == 'Walk') 
-    ].to_dict()
-    #switch to undefined ^ why is it not plotting strikeouts
+    scatter_points = PlateLocSide[
+    (
+      (data['PitchCall'] == 'StrikeSwinging') 
+      | (data['PitchCall'] == 'FoulBall') 
+      | (data['PitchCall'] == 'InPlay') 
+    )
+  ].to_dict()
 
-    rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1)
+    rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1, lw=1)
     plt.gca().add_patch(rect);
 
-    rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1)
+    rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1, lw=1)
     plt.gca().add_patch(rect);
 
-    rect = Rectangle((-.9,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([-0.3, -0.3], [1.5, 3], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([0.3, 0.3], [1.5, 3], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([-0.9, 0.9], [2.5, 2.5], 'k-', lw=1)
 
-    rect = Rectangle((-.3,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((-.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((-.3,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((-.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+    plt.plot([-0.9, 0.9], [2, 2], 'k-', lw=1)
 
     for i in scatter_points:
         if data['PitchCall'][i] == 'HitByPitch': 
@@ -96,23 +76,23 @@ def report16(data, save_path):
         plt.scatter(
             [PlateLocSide [i]],
             [PlateLocHeight [i]], 
-            s=100, 
+            s=75, 
             c=pitch_colors.get(TaggedPitchType[i], 'red'),
             marker=pitch_result.get(PitchCall[i], '*'),
             edgecolor='black', 
             alpha=pitch_alphas.get(TaggedPitchType[i], '1'),
         )
-        plt.annotate(
-        f'{round(ReleaseSpeed[i], 1)}, {KorBB[i]}',
-        xy=(PlateLocSide[i], PlateLocHeight[i]),
-        xycoords='data',
-        xytext=(PlateLocSide[i] + 10, PlateLocHeight [i]),
-        textcoords='offset points',
-        )
+        # plt.annotate(
+        # round(ReleaseSpeed[i], 1),      
+        # xy=(PlateLocSide[i], PlateLocHeight[i]),
+        # xycoords='data',
+        # xytext=(PlateLocSide[i] + 10, PlateLocHeight [i]),
+        # textcoords='offset points',
+        # )
 
-    plt.title(f'{len(scatter_points)} Walks', fontsize=16)
-    plt.xlabel('PlateLocSide', fontsize=12)
-    plt.ylabel('PlateLocHeight', fontsize=12)
+    plt.title(f'{len(scatter_points)} All Swings', fontsize=16)
+    plt.xlabel('Side (FT)', fontsize=12)
+    plt.ylabel('Height (FT)', fontsize=12)
 
     pitch_colors_labels = []
 
@@ -126,7 +106,9 @@ def report16(data, save_path):
         mlines.Line2D([], [], color='black', marker=pitch_result[key], linestyle='None', markersize=10, label=key)
     )
 
+
     plt.grid(False)
+
     plt.text(-3.95, 3.92, Pitcher, fontsize = 4)
     plt.text(-3.95, 3.83, 'Pitcher POV', fontsize = 4)
     plt.legend(handles=pitch_colors_labels)
@@ -134,9 +116,9 @@ def report16(data, save_path):
     plt.ylim([0,4])
     plt.tight_layout()
 
-    # remains the same for every file
+  # remains the same for every file
     check_path(save_path)
 
-    # save image to folder
+  # save image to folder
     plt.savefig(get_path(save_path, 'report16'))
     plt.close()

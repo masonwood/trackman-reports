@@ -2,7 +2,7 @@ from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle
 import matplotlib.lines as mlines
 import os
-from file import check_path, get_path
+from file import check_path,get_path
 
 plt.style.use('seaborn')
 
@@ -36,119 +36,72 @@ pitch_alphas = {
   'Splitter': .95,
 }
 
-# change function name here and import in main.py
 def report8(data, save_path):
-    Pitcher = data['Pitcher'][1]
-    PlateLocHeight = data['PlateLocHeight']
-    PlateLocSide = data['PlateLocSide']
-    TaggedPitchType = data['TaggedPitchType']
-    PitchCall = data['PitchCall']
-    ExitSpeed = data['ExitSpeed']
-    ReleaseSpeed = data['RelSpeed']
+  Pitcher = data['Pitcher'][1]
+  PlateLocHeight = data['PlateLocHeight']
+  PlateLocSide = data['PlateLocSide']
+  TaggedPitchType = data['TaggedPitchType']
+  PitchCall = data['PitchCall']
+  BatterSide = data['BatterSide']
+  scatter_points = PlateLocSide
 
-    scatter_points = PlateLocSide[
+  scatter_points = PlateLocSide[
     (
-        (data['PitchCall'] == 'BallCalled')
-    | (data['PitchCall'] == 'HitByPitch') 
-    )
-    & 
-    (
-        (data['TaggedPitchType'] == 'Fastball')
-        | (data['TaggedPitchType'] == 'Sinker')
-        | (data['TaggedPitchType'] == 'Cutter')
+        (data['BatterSide'] == 'Left')
     )
     ].to_dict()
 
-    #plot only Fastball, Sinker, Cutter from TaggedPitchType
+  rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1, lw=1)
+  plt.gca().add_patch(rect);
 
-    rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1, lw=1)
+  plt.gca().add_patch(rect);
 
-    rect = Rectangle((-0.9,1.5), 1.8, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  plt.plot([-0.3, -0.3], [1.5, 3], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  plt.plot([0.3, 0.3], [1.5, 3], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  plt.plot([-0.9, 0.9], [2.5, 2.5], 'k-', lw=1)
 
-    rect = Rectangle((-.9,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  plt.plot([-0.9, 0.9], [2, 2], 'k-', lw=1)
 
-    rect = Rectangle((-.3,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
 
-    rect = Rectangle((-.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  for i, j in enumerate(scatter_points):
+    plt.scatter(
+      [PlateLocSide [i]],
+      [PlateLocHeight [i]], 
+      s=75, 
+      c=pitch_colors.get(TaggedPitchType[i], 'red'),
+      marker=pitch_result.get(PitchCall[i], '*'),
+      edgecolor='black', 
+      alpha=pitch_alphas.get(TaggedPitchType[i], '1'),
+    )  
 
-    rect = Rectangle((-.3,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  plt.title(f'{len(scatter_points)} Pitches vs. LHH', fontsize=16)
+  plt.xlabel('Side (FT)', fontsize=12)
+  plt.ylabel('Height (FT)', fontsize=12)
 
-    rect = Rectangle((-.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
+  pitch_colors_labels = []
 
-    rect = Rectangle((.3,1.5), 3/5, .5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, 1, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    rect = Rectangle((.3,1.5), 3/5, 1.5, fill=False, color='000000', alpha=1)
-    plt.gca().add_patch(rect);
-
-    for i in scatter_points:
-        # if data['PitchCall'][i] == 'HitByPitch': 
-        #   continue
-
-        plt.scatter(
-            [PlateLocSide [i]],
-            [PlateLocHeight [i]], 
-            s=100, 
-            c=pitch_colors.get(TaggedPitchType[i], 'red'),
-            marker=pitch_result.get(PitchCall[i], '*'),
-            edgecolor='black', 
-            alpha=pitch_alphas.get(TaggedPitchType[i], '1'),
-        )
-        # plt.annotate(
-        #   f'{round(ReleaseSpeed[i], 1)}, {PitchCall[i]}',
-        #   xy=(PlateLocSide[i], PlateLocHeight[i]),
-        #   xycoords='data',
-        #   xytext=(PlateLocSide[i] + 10, PlateLocHeight [i]),
-        #   textcoords='offset points',
-        # )
-
-        
-
-    plt.title('Fast Balls', fontsize=16)
-    plt.xlabel('PlateLocSide', fontsize=12)
-    plt.ylabel('PlateLocHeight', fontsize=12)
-
-    pitch_colors_labels = []
-
-    for key in pitch_colors:
-        pitch_colors_labels.append(
-        mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
-        )
-
-    for key in pitch_result:
-        pitch_colors_labels.append(
-        mlines.Line2D([], [], color='black', marker=pitch_result[key], linestyle='None', markersize=10, label=key)
+  for key in pitch_colors:
+    pitch_colors_labels.append(
+      mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
     )
 
+  for key in pitch_result:
+      pitch_colors_labels.append(
+      mlines.Line2D([], [], color='black', marker=pitch_result[key], linestyle='None', markersize=10, label=key)
+    )
 
-    plt.grid(False)
+  plt.grid(False)
 
-    plt.text(-3.95, 3.92, Pitcher, fontsize = 4)
-    plt.text(-3.95, 3.83, 'Pitcher POV', fontsize = 4)
-    plt.legend(handles=pitch_colors_labels)
-    plt.xlim([-4,4])
-    plt.ylim([0,4])
-    plt.tight_layout()
+  plt.text(-3.95, 3.92, Pitcher, fontsize = 4)
+  plt.text(-3.95, 3.83, 'Pitcher POV', fontsize = 4)
+  plt.legend(handles=pitch_colors_labels)
+  plt.xlim([-4,4])
+  plt.ylim([0,4])
+  plt.tight_layout()
 
-  # remains the same for every file
-    check_path(save_path)
-
-  # save image to folder
-    plt.savefig(get_path(save_path, 'report8'))
-    plt.close()
+  check_path(save_path)
+  plt.savefig(get_path(save_path, 'report8'))
+  plt.close()
