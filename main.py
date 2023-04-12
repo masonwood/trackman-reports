@@ -1,5 +1,5 @@
 import os
-import inquirer
+import glob
 import pandas as pd
 
 from report1 import report1
@@ -32,51 +32,40 @@ from report27 import report27
 from report28 import report28
 from report29 import report29
 
-data_paths = os.listdir('../zCSV')
+data_folder = "../zCSV"
 
-questions = [
-  inquirer.List(
-    'file_path',
-    message="What file do you want to analyze?",
-    choices=data_paths,
-  ),
-  inquirer.Text(
-    'folder_name',
-    message="What folder do you want to save the data to?"
-  )
-]
+csv_files = glob.glob(os.path.join(data_folder, "*.csv"))
 
-answers = inquirer.prompt(questions)
-
-data = pd.read_csv(f"../zCSV/{answers['file_path']}")
-folder_name = answers['folder_name']
-
-report1(data, folder_name)
-report2(data, folder_name)
-report3(data, folder_name)
-report4(data, folder_name)
-report5(data, folder_name)
-report6(data, folder_name)
-report7(data, folder_name)
-report8(data, folder_name)
-report9(data, folder_name)
-report10(data, folder_name)
-report11(data, folder_name)
-report12(data, folder_name)
-report13(data, folder_name)
-report14(data, folder_name)
-report15(data, folder_name)
-report16(data, folder_name)
-report17(data, folder_name)
-report18(data, folder_name)
-report19(data, folder_name)
-report20(data, folder_name)
-report21(data, folder_name)
-report22(data, folder_name)
-report23(data, folder_name)
-report24(data, folder_name)
-report25(data, folder_name)
-# report26(data, folder_name)
-report27(data, folder_name)
-report28(data, folder_name)
-report29(data, folder_name)
+for csv_file in csv_files:
+    data = pd.read_csv(csv_file)
+    folder_name = os.path.splitext(os.path.basename(csv_file))[0]
+    
+    report1(data, folder_name)
+    report2(data, folder_name)
+    report3(data, folder_name)
+    report4(data, folder_name)
+    report5(data, folder_name)
+    report6(data, folder_name)
+    report7(data, folder_name)
+    report8(data, folder_name)
+    report9(data, folder_name)
+    report10(data, folder_name)
+    report11(data, folder_name)
+    report12(data, folder_name)
+    report13(data, folder_name)
+    report14(data, folder_name)
+    report15(data, folder_name)
+    report16(data, folder_name)
+    report17(data, folder_name)
+    report18(data, folder_name)
+    report19(data, folder_name)
+    report20(data, folder_name)
+    report21(data, folder_name)
+    report22(data, folder_name)
+    report23(data, folder_name)
+    report24(data, folder_name)
+    report25(data, folder_name)
+    # report26(data, folder_name)
+    report27(data, folder_name)
+    report28(data, folder_name)
+    report29(data, folder_name)

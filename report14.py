@@ -51,7 +51,7 @@ def report14(data, save_path):
     (data['PlayResult'] == 'Single') 
     | (data['PlayResult'] == 'Double') 
     | (data['PlayResult'] == 'Triple') 
-    | (data['PlayResult'] == 'Homerun') 
+    | (data['PlayResult'] == 'HomeRun') 
     ].to_dict()
 
     rect = Rectangle((-1,1.4), 2, 1.7, fill=False, color='000000', alpha=1, lw=1)
@@ -95,21 +95,21 @@ def report14(data, save_path):
 
     pitch_colors_labels = []
 
-    for key in pitch_colors:
-        pitch_colors_labels.append(
-        mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
-    )
+    # for key in pitch_colors:
+    #     pitch_colors_labels.append(
+    #     mlines.Line2D([], [], color=pitch_colors[key], marker='o', linestyle='None', markersize=10, label=key)
+    # )
 
-    for key in pitch_result:
-        pitch_colors_labels.append(
-        mlines.Line2D([], [], color='black', marker=pitch_result[key], linestyle='None', markersize=10, label=key)
-    )
+    # for key in pitch_result:
+    #     pitch_colors_labels.append(
+    #     mlines.Line2D([], [], color='black', marker=pitch_result[key], linestyle='None', markersize=10, label=key)
+    # )
 
 
     plt.grid(False)
 
-    plt.text(-3.95, 3.92, Pitcher, fontsize = 4)
-    plt.text(-3.95, 3.83, 'Pitcher POV', fontsize = 4)
+    # plt.text(-3.95, 3.92, Pitcher, fontsize = 4)
+    # plt.text(-3.95, 3.83, 'Pitcher POV', fontsize = 4)
     plt.legend(handles=pitch_colors_labels)
     plt.xlim([-4,4])
     plt.ylim([0,4])
